@@ -6,38 +6,38 @@ on:
       - main
 
 jobs:
-  # Build Job
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
-
-      - name: Install Dependencies
-        run: |
-          # Assuming you don't have any dependencies for a basic HTML page, we can skip this step.
+        uses: actions/checkout@v4
 
       - name: Upload artifact to enable deployment
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
-          name: html-file
+          name: html-files
           path: |
-            ./index.html
+            index.html
+            
 
-  # Deploy Job
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
       - name: Download artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
-          name: html-file
+          name: html-files
           path: ./html
 
       - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+        uses: peaceiris/actions-gh-pages@v4
         with:
-          github_token: ${{ secrets.KEY }}  # Use the default GitHub token for authentication
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_branch: gh-pages
           publish_dir: ./html
-
